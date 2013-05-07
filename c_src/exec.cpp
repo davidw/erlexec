@@ -65,7 +65,7 @@
 #include <ei.h>
 #include "ei++.h"
 
-#if defined(__CYGWIN__) || defined(__WIN32)
+#if defined(__CYGWIN__) || defined(__WIN32) || defined(__APPLE__)
 #  define sigtimedwait(a, b, c) 0
 #endif
 
