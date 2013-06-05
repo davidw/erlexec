@@ -65,7 +65,7 @@ init([]) ->
         [{  exec,                           % Id       = internal id
             {exec, start_link, [Options]},  % StartFun = {M, F, A}
             permanent,                      % Restart  = permanent | transient | temporary
-            2000,                           % Shutdown = brutal_kill | int() >= 0 | infinity
+            10000,                          % Shutdown = brutal_kill | int() >= 0 | infinity
             worker,                         % Type     = worker | supervisor
             [exec]                          % Modules  = [Module] | dynamic
         }]
