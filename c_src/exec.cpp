@@ -461,23 +461,23 @@ int main(int argc, char* argv[])
             }
 
             switch (cmd) {
-		case MANAGE: {
+                case MANAGE: {
                     // {manage, Cmd::string(), Options::list()}
                     CmdOptions po;
 
                     long pid;
-		    pid_t realpid;
-                    if (arity != 2 || (eis.decodeInt(pid)) < 0) {
-			send_error_str(transId, true, "badarg");
-			continue;
-		    }
-		    realpid = pid;
+                    pid_t realpid;
+                    if (arity != 3 || (eis.decodeInt(pid)) < 0 || po.ei_decode(eis) < 0) {
+                        send_error_str(transId, true, "badarg");
+                        continue;
+                    }
+                    realpid = pid;
 
-		    CmdInfo ci("managed pid", po.kill_cmd(), realpid);
-		    children[realpid] = ci;
-		    send_ok(transId, pid);
+                    CmdInfo ci("managed pid", po.kill_cmd(), realpid);
+                    children[realpid] = ci;
+                    send_ok(transId, pid);
                     break;
-		}
+                }
 
                 case EXECUTE:
                 case SHELL: {
