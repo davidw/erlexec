@@ -173,7 +173,7 @@ extern char **environ; // getting the whole environment
 ei::Serializer eis(/* packet header size */ 2);
 
 sigjmp_buf  jbuf;
-int alarm_max_time     = 12;
+int alarm_max_time     = 15;
 static bool debug      = false;
 static bool oktojump   = false;
 static bool signaled   = false;     // indicates that SIGCHLD was signaled
