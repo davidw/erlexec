@@ -80,7 +80,7 @@ using namespace ei;
 
 /* In the event we have tried to kill something, wait this many
  * seconds and then *really* kill it with SIGKILL if needs be.  */
-#define WAIT_KILL_SECONDS 5
+#define WAIT_KILL_SECONDS 10
 
 /* During the final cleanup, wait this many seconds for subprocesses
  * to die before SIGKILL'ing them. */
