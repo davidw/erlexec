@@ -66,7 +66,7 @@
 #include <ei.h>
 #include "ei++.h"
 
-#if defined(__CYGWIN__) || defined(__WIN32) || defined(__APPLE__)
+#if defined(__CYGWIN__) || defined(__WIN32)
 #  define sigtimedwait(a, b, c) 0
 #endif
 
@@ -461,8 +461,9 @@ int main(int argc, char* argv[])
                 terminated = 10; break;
             }
 
-            enum CmdTypeT        { MANAGE, EXECUTE, SHELL,   STOP,   KILL,   LIST } cmd;
-            const char* cmds[] = { "manage", "run", "shell", "stop", "kill", "list"};
+
+            enum CmdTypeT        { MANAGE, EXECUTE, SHELL,   STOP,   KILL,  LIST, SHUTDOWN } cmd;
+            const char* cmds[] = { "manage", "run",   "shell", "stop", "kill", "list", "shutdown" };
 
             /* Determine the command */
             if ((int)(cmd = (CmdTypeT) eis.decodeAtomIndex(cmds, command)) < 0) {
@@ -473,6 +474,10 @@ int main(int argc, char* argv[])
             }
 
             switch (cmd) {
+                case SHUTDOWN: {
+                    terminated = 200;
+                    break;
+                }
                 case MANAGE: {
                     // {manage, Cmd::string(), Options::list()}
                     CmdOptions po;
@@ -490,7 +495,6 @@ int main(int argc, char* argv[])
                     send_ok(transId, pid);
                     break;
                 }
-
                 case EXECUTE:
                 case SHELL: {
                     // {shell, Cmd::string(), Options::list()}
@@ -596,16 +600,7 @@ pid_t start_child(const char* cmd, const char* cd, char* const* env, int user, i
         case 0: {
             #if !defined(__CYGWIN__) && !defined(__WIN32)
             // I am the child
-            if (user != INT_MAX && 
-#ifdef HAVE_SETRESUID
-		setresuid(user, user, user)
-#elif HAVE_SETREUID
-		setreuid(-1, user)
-#else
-#error setresuid(3) not supported!
-#endif
-		< 0) {
-
+            if (user != INT_MAX && setresuid(user, user, user) < 0) {
                 err.write("Cannot set effective user to %d", user);
                 perror(err.c_str());
                 return EXIT_FAILURE;
